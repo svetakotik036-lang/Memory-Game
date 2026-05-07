@@ -17,6 +17,7 @@ Proiectul a fost ales pentru a dezvolta atenția, memoria și gândirea logică 
 - scor sau număr de mutări
 - timer pentru joc
 - interfață grafică simplă
+- design simplu și intuitiv
 
 ## How to Run
 1. Deschide proiectul în Android Studio
