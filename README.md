@@ -13,7 +13,7 @@ Memory Game este un joc de logică și memorie în care jucătorul trebuie să d
 
 ## Motivation
 
-Proiectul a fost ales pentru a dezvolta atenția, memoria și gândirea logică a utilizatorilor, dar și pentru a exersa programarea în Kotlin și lucrul în echipă folosind GitHub.
+Proiectul a fost ales pentru a dezvolta atenția, memoria și gândirea logică a utilizatorilor, dar și pentru a exersa programarea în Kotlin și lucrul în echipă folosind GitHub ca o aplicație de ajutor.
 
 ## Features
 
