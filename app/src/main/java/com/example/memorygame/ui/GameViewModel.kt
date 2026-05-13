@@ -24,7 +24,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val symbols =
         listOf("⚡", "🔥", "💎", "🌟", "🍎", "🌈", "🎈", "🍀", "🐱", "🚀", "🎸", "🍕", "⚽", "🍄", "🍦", "👑")
 
-    // Specificăm tipul explicit pentru a ajuta compilatorul
     var currentDiff by mutableStateOf<Difficulty>(Difficulty.EASY)
 
     private val _cards = MutableStateFlow<List<MemoryCard>>(emptyList())
@@ -103,7 +102,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         if (busy || isPreviewing) return
         val currentCards = _cards.value.toMutableList()
 
-        // Verificăm dacă indexul este valid pentru a evita erori la runtime
         if (index !in currentCards.indices) return
         if (currentCards[index].isFaceUp || currentCards[index].isMatched) return
 
