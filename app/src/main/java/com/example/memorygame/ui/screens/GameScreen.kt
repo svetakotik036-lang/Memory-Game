@@ -122,12 +122,10 @@ fun GameScreen(vm: GameViewModel, onExit: () -> Unit) {
 
         Spacer(Modifier.height(20.dp))
 
-        // LazyVerticalGrid corectat
         LazyVerticalGrid(
             columns = GridCells.Fixed(vm.currentDiff.cols),
             modifier = Modifier.weight(1f)
         ) {
-            // Asigură-te că folosești varianta items care primește lista 'cards'
             items(cards, key = { it.id }) { card ->
                 MemoryCardItem(card, vm.currentDiff.color) {
                     vm.onCardClick(card.id)

@@ -1,6 +1,5 @@
 package com.example.memorygame.ui.screens
 
-// IMPORTUL ADAUGAT:
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,8 +36,8 @@ fun StartScreen(onStart: () -> Unit) {
         Surface(
             modifier = Modifier.size(120.dp),
             shape = CircleShape,
-            color = GlassBg, // Acum va fi recunoscut
-            border = BorderStroke(1.dp, GlassStroke) // Acum va fi recunoscut
+            color = GlassBg,
+            border = BorderStroke(1.dp, GlassStroke)
         ) {
             Box(contentAlignment = Alignment.Center) { Text("🧠", fontSize = 60.sp) }
         }
@@ -52,7 +51,7 @@ fun StartScreen(onStart: () -> Unit) {
                 .fillMaxWidth(0.7f)
                 .height(60.dp),
             shape = RoundedCornerShape(20.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = ActionButtonPink) // Acum va fi recunoscut
+            colors = ButtonDefaults.buttonColors(containerColor = ActionButtonPink)
         ) {
             Text("Începe Jocul", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }

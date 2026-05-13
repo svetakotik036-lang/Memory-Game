@@ -53,7 +53,6 @@ fun LevelScreen(vm: GameViewModel, onSelect: (Difficulty) -> Unit) {
 
         Spacer(Modifier.height(30.dp))
 
-        // Iterăm prin valorile Enum-ului Difficulty
         Difficulty.entries.forEach { diff ->
             val best = vm.getBestTime(diff)
 
