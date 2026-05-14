@@ -98,7 +98,7 @@ fun WinDialog(vm: GameViewModel, onExit: () -> Unit) {
                 .clip(RoundedCornerShape(32.dp))
                 .background(GlassBgFinal)
                 .border(2.dp, GlassStroke, RoundedCornerShape(32.dp))
-                .padding(32.dp),
+                .padding(36.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -113,7 +113,7 @@ fun WinDialog(vm: GameViewModel, onExit: () -> Unit) {
             Text(
                 "Felicitări! 🎉",
                 color = Color.White,
-                fontSize = 32.sp,
+                fontSize = 34.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(16.dp))
