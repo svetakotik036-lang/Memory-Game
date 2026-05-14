@@ -27,6 +27,7 @@ import com.example.memorygame.ui.theme.GlassBg
 import com.example.memorygame.ui.theme.GlassStroke
 
 @Composable
+//Un start al programului
 fun StartScreen(onStart: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
