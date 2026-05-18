@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
@@ -34,27 +36,35 @@ import com.example.memorygame.ui.theme.GlassStroke
 
 @Composable
 fun LevelScreen(vm: GameViewModel, onSelect: (Difficulty) -> Unit) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(horizontal = 24.dp)
+            .verticalScroll(scrollState)
     ) {
 
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(50.dp))
 
         Text(
-            "Alege Nivelul",
+            text = "Alege Nivelul",
             color = Color.White,
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold
         )
 
-        Text("Selectează dificultatea dorită", color = Color.White.copy(0.7f))
+        Text(
+            text = "Selectează categoria de vârstă potrivită",
+            color = Color.White.copy(0.7f),
+            fontSize = 16.sp
+        )
 
         Spacer(Modifier.height(30.dp))
 
         Difficulty.entries.forEach { diff ->
             val best = vm.getBestTime(diff)
+            val totalPairs = (diff.rows * diff.cols) / 2
 
             Row(
                 modifier = Modifier
@@ -64,48 +74,61 @@ fun LevelScreen(vm: GameViewModel, onSelect: (Difficulty) -> Unit) {
                     .background(GlassBg)
                     .border(1.dp, GlassStroke, RoundedCornerShape(24.dp))
                     .clickable { onSelect(diff) }
-                    .padding(20.dp),
+                    .padding(18.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
                         .size(50.dp)
-                        .background(diff.color, RoundedCornerShape(12.dp)),
+                        .background(diff.color.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+                        .border(1.dp, diff.color, RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.PlayArrow, null, tint = Color.White)
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        tint = diff.color
+                    )
                 }
 
                 Spacer(Modifier.width(16.dp))
 
                 Column(Modifier.weight(1f)) {
                     Text(
-                        diff.label,
+                        text = diff.label,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 18.sp
                     )
-                    Text(diff.desc, color = Color.White.copy(0.6f), fontSize = 14.sp)
+                    Text(
+                        text = "${diff.ageRange} • $totalPairs perechi",
+                        color = Color.White.copy(0.6f),
+                        fontSize = 13.sp
+                    )
                 }
-
                 if (best > 0) {
                     Column(horizontalAlignment = Alignment.End) {
                         Icon(
-                            Icons.Default.Star,
-                            null,
-                            tint = Color.Yellow,
-                            modifier = Modifier.size(18.dp)
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null,
+                            tint = Color(0xFFFFD600),
+                            modifier = Modifier.size(16.dp)
                         )
-                        Text("Best", color = Color.White.copy(0.5f), fontSize = 10.sp)
                         Text(
-                            "${best}s",
-                            color = Color.Yellow,
+                            text = "Best",
+                            color = Color.White.copy(0.5f),
+                            fontSize = 10.sp
+                        )
+                        Text(
+                            text = "${best}s",
+                            color = Color(0xFFFFD600),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = 15.sp
                         )
                     }
                 }
             }
         }
+        Spacer(Modifier.height(40.dp))
     }
 }

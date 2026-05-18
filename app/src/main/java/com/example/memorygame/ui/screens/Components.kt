@@ -58,18 +58,20 @@ fun MemoryCardItem(card: MemoryCard, color: Color, onClick: () -> Unit) {
 
     Box(
         modifier = Modifier
-            .padding(4.dp)
+            .padding(2.dp)
             .aspectRatio(1f)
             .graphicsLayer { rotationY = rotation; cameraDistance = 12f * density }
             .clip(RoundedCornerShape(12.dp))
             .background(
                 when {
-                    card.isMatched -> SuccessGreen; card.isFaceUp -> color; else -> GlassBg
+                    card.isMatched -> SuccessGreen
+                    card.isFaceUp -> color
+                    else -> color
                 }
             )
             .border(
-                width = if (card.isMatched) 2.dp else 1.dp,
-                color = if (card.isMatched) Color.White else GlassStroke,
+                width = if (card.isMatched) 2.dp else 1.5.dp,
+                color = if (card.isMatched) Color.White else Color.White.copy(0.5f),
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable { onClick() },
@@ -77,9 +79,17 @@ fun MemoryCardItem(card: MemoryCard, color: Color, onClick: () -> Unit) {
     ) {
         if (rotation > 90f) {
             Text(
-                card.symbol,
+                text = card.symbol,
+                fontSize = 24.sp,
+                modifier = Modifier.graphicsLayer { rotationY = 180f }
+            )
+        } else {
+            Text(
+                text = "?",
                 fontSize = 28.sp,
-                modifier = Modifier.graphicsLayer { rotationY = 180f })
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
         }
     }
 }
@@ -98,33 +108,32 @@ fun WinDialog(vm: GameViewModel, onExit: () -> Unit) {
                 .clip(RoundedCornerShape(32.dp))
                 .background(GlassBgFinal)
                 .border(2.dp, GlassStroke, RoundedCornerShape(32.dp))
-                .padding(32.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(80.dp)
                     .background(Color(0xFFFFB300), CircleShape)
             ) {
-                Icon(Icons.Default.Star, null, tint = Color.White, modifier = Modifier.size(60.dp))
+                Icon(Icons.Default.Star, null, tint = Color.White, modifier = Modifier.size(50.dp))
             }
+            Spacer(Modifier.height(16.dp))
             Text(
                 "Felicitări! 🎉",
                 color = Color.White,
-                fontSize = 32.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))
             Row {
                 repeat(3) { index ->
                     Icon(
-                        Icons.Default.Star,
-                        null,
+                        Icons.Default.Star, null,
                         tint = if (index < vm.stars) Color.Yellow else Color.White.copy(0.2f),
                         modifier = Modifier
-                            .size(45.dp)
+                            .size(40.dp)
                             .padding(horizontal = 4.dp)
                     )
                 }
@@ -138,16 +147,16 @@ fun WinDialog(vm: GameViewModel, onExit: () -> Unit) {
             )
             Spacer(Modifier.height(12.dp))
             StatCard(Icons.Default.CheckCircle, Color(0xFFE91E63), "Mutări", "${vm.moves}")
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 TextButton(
                     onClick = onExit,
                     modifier = Modifier
                         .weight(1f)
-                        .height(55.dp)
+                        .height(50.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(GlassBg)
                 ) {
@@ -157,11 +166,11 @@ fun WinDialog(vm: GameViewModel, onExit: () -> Unit) {
                     onClick = { vm.initGame(vm.currentDiff) },
                     modifier = Modifier
                         .weight(1f)
-                        .height(55.dp),
+                        .height(50.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = ActionButtonPink)
                 ) {
-                    Text("Rejoacă", fontWeight = FontWeight.Bold)
+                    Text("Rejoacă", fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
@@ -181,17 +190,17 @@ fun StatCard(icon: ImageVector, color: Color, label: String, value: String) {
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(36.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(color),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, null, tint = Color.White, modifier = Modifier.size(24.dp))
+            Icon(icon, null, tint = Color.White, modifier = Modifier.size(20.dp))
         }
-        Spacer(Modifier.width(16.dp))
+        Spacer(Modifier.width(12.dp))
         Column {
-            Text(label, color = Color.White.copy(0.6f), fontSize = 12.sp)
-            Text(value, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(label, color = Color.White.copy(0.6f), fontSize = 11.sp)
+            Text(value, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
     }
 }

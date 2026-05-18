@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.MusicOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -35,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.memorygame.audio.SoundManager
 import com.example.memorygame.ui.GameViewModel
 import com.example.memorygame.ui.theme.BgEnd
 import com.example.memorygame.ui.theme.BgStart
@@ -42,7 +45,7 @@ import com.example.memorygame.ui.theme.GlassBg
 import java.util.Locale
 
 @Composable
-fun MemoryApp() {
+fun MemoryApp(soundManager: SoundManager) {
     val vm: GameViewModel = viewModel()
     var screen by remember { mutableStateOf("start") }
     val backgroundBrush = Brush.verticalGradient(listOf(BgStart, BgEnd))
@@ -53,15 +56,16 @@ fun MemoryApp() {
             .background(backgroundBrush)
     ) {
         when (screen) {
-            "start" -> StartScreen { screen = "levels" }
+            "start" -> StartScreen(soundManager) { screen = "levels" }
             "levels" -> LevelScreen(vm) { diff -> vm.initGame(diff); screen = "game" }
-            "game" -> GameScreen(vm) { screen = "levels" }
+            "game" -> GameScreen(vm, soundManager) { screen = "levels" }
         }
     }
 }
 
+@Suppress("SpellCheckingInspection")
 @Composable
-fun GameScreen(vm: GameViewModel, onExit: () -> Unit) {
+fun GameScreen(vm: GameViewModel, soundManager: SoundManager, onExit: () -> Unit) {
     val cards by vm.cards.collectAsState()
     val totalPairs = (vm.currentDiff.rows * vm.currentDiff.cols) / 2
     val progressValue = if (totalPairs == 0) 0f else vm.matches.toFloat() / totalPairs.toFloat()
@@ -81,6 +85,21 @@ fun GameScreen(vm: GameViewModel, onExit: () -> Unit) {
             IconButton(onClick = onExit, modifier = Modifier.background(GlassBg, CircleShape)) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
             }
+            var isPlaying by remember { mutableStateOf(soundManager.isPlaying()) }
+            IconButton(
+                onClick = {
+                    soundManager.toggleMusic()
+                    isPlaying = soundManager.isPlaying()
+                },
+                modifier = Modifier.background(GlassBg, CircleShape)
+            ) {
+                Icon(
+                    imageVector = if (isPlaying) Icons.Default.MusicNote else Icons.Default.MusicOff,
+                    contentDescription = "Muzică",
+                    tint = Color.White
+                )
+            }
+
             Text(
                 "⏱ ${vm.time / 60}:${String.format(Locale.getDefault(), "%02d", vm.time % 60)}",
                 color = Color.White,
@@ -89,7 +108,7 @@ fun GameScreen(vm: GameViewModel, onExit: () -> Unit) {
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             )
             Text(
-                "🎯 ${vm.moves} Mutări",
+                "🎯 ${vm.moves}",
                 color = Color.White,
                 modifier = Modifier
                     .background(GlassBg, RoundedCornerShape(12.dp))
@@ -124,7 +143,9 @@ fun GameScreen(vm: GameViewModel, onExit: () -> Unit) {
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(vm.currentDiff.cols),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(cards, key = { it.id }) { card ->
                 MemoryCardItem(card, vm.currentDiff.color) {
