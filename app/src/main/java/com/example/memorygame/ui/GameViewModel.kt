@@ -20,12 +20,12 @@ import kotlinx.coroutines.launch
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val prefs: SharedPreferences =
         application.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
+    private val symbols = listOf(
+        "⚡", "🔥", "💎", "🌟", "🍎", "🌈", "🎈", "🍀", "🐱", "🚀", "🎸", "🍕",
+        "⚽", "🍄", "🍦", "👑", "🎨", "🌍", "✈️", "🏀", "🍔", "🚲", "🎮", "🦄"
+    )
 
-    private val symbols =
-        listOf("⚡", "🔥", "💎", "🌟", "🍎", "🌈", "🎈", "🍀", "🐱", "🚀", "🎸", "🍕", "⚽", "🍄", "🍦", "👑")
-
-    var currentDiff by mutableStateOf<Difficulty>(Difficulty.EASY)
-
+    var currentDiff by mutableStateOf(Difficulty.EASY)
     private val _cards = MutableStateFlow<List<MemoryCard>>(emptyList())
     val cards = _cards.asStateFlow()
 
@@ -47,17 +47,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val gameSymbols = (symbols.take(totalPairs) + symbols.take(totalPairs)).shuffled()
 
         _cards.value = gameSymbols.mapIndexed { index, s ->
-            MemoryCard(
-                id = index,
-                symbol = s,
-                isFaceUp = true
-            )
+            MemoryCard(id = index, symbol = s, isFaceUp = true)
         }
 
         moves = 0
         matches = 0
         time = 0
-        stars = 0
         firstIndex = null
         showWinDialog = false
         isPreviewing = true
@@ -78,31 +73,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             while (isPlaying) {
                 delay(1000)
-                if (isPlaying) {
-                    time++
-                }
+                if (isPlaying) time++
             }
         }
     }
 
-    private fun calculateResult() {
-        val minMoves = (currentDiff.rows * currentDiff.cols) / 2
-        stars = when {
-            moves <= minMoves + 4 -> 3
-            moves <= minMoves + 12 -> 2
-            else -> 1
-        }
-        val currentBest = getBestTime(currentDiff)
-        if (currentBest == 0 || time < currentBest) {
-            prefs.edit { putInt("best_${currentDiff.name}", time) }
-        }
-    }
-
     fun onCardClick(index: Int) {
-        if (busy || isPreviewing) return
+        if (busy || isPreviewing || !isPlaying) return
         val currentCards = _cards.value.toMutableList()
 
-        if (index !in currentCards.indices) return
         if (currentCards[index].isFaceUp || currentCards[index].isMatched) return
 
         currentCards[index] = currentCards[index].copy(isFaceUp = true)
@@ -134,6 +113,19 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 firstIndex = null
                 busy = false
             }
+        }
+    }
+
+    private fun calculateResult() {
+        val minMoves = (currentDiff.rows * currentDiff.cols) / 2
+        stars = when {
+            moves <= minMoves + 3 -> 3
+            moves <= minMoves + 8 -> 2
+            else -> 1
+        }
+        val currentBest = getBestTime(currentDiff)
+        if (currentBest == 0 || time < currentBest) {
+            prefs.edit { putInt("best_${currentDiff.name}", time) }
         }
     }
 }
